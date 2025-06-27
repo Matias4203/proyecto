@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Heart Constellation</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-</head>
-<body>
-  <div class="heart-constellation">
-    <p>A veces, el universo nos envía señales...</p>
-    <div class="hearts">❤️ ✨ 💖 🌌</div>
-  </div>
+// Función para crear corazones flotantes
+function crearCorazon() {
+  const corazon = document.createElement("div");
+  corazon.classList.add("corazon");
+  corazon.textContent = "❤️";
 
-  <script src="script.js"></script>
-</body>
-</html>
+  // Posición aleatoria en la pantalla
+  corazon.style.left = Math.random() * 100 + "vw";
+  corazon.style.top = Math.random() * 100 + "vh";
+
+  // Agregar al body y remover después de animarse
+  document.body.appendChild(corazon);
+
+  setTimeout(() => {
+    corazon.remove();
+  }, 3000);
+}
+
+// Crear corazones cada 500 ms automáticamente
+setInterval(crearCorazon, 500);
