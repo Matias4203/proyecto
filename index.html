@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Deseo - Constelación</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      overflow: hidden;
+      color: white;
+      font-family: 'Great Vibes', cursive;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .seccion {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+      text-align: center;
+    }
+    #mensaje {
+      font-size: 2.5em;
+      opacity: 0;
+      transition: opacity 2s ease-in;
+    }
+    #botonDeseo {
+      margin-top: 30px;
+      padding: 12px 30px;
+      font-size: 1.5em;
+      background-color: #ff66cc;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="constelaciones"></canvas>
+  <section class="seccion" id="intro">
+    <p id="mensaje"></p>
+    <button id="botonDeseo">pero mi deseo...</button>
+  </section>
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/30/audio_bf0c81d281.mp3?filename=romantic-piano-ambient-144238.mp3" type="audio/mp3">
+  </audio>
+  <script>
+    const mensaje = document.getElementById("mensaje");
+    const boton = document.getElementById("botonDeseo");
+    const texto1 = "A veces, el universo nos envía señales.";
+
+    function escribir(id, texto, delay = 60, callback = null) {
+      let i = 0;
+      id.style.opacity = 1;
+      function escribirLetra() {
+        if (i < texto.length) {
+          id.textContent += texto[i++];
+          setTimeout(escribirLetra, delay);
+        } else if (callback) callback();
+      }
+      escribirLetra();
+    }
+
+    escribir(mensaje, texto1, 80, () => {
+      setTimeout(() => { boton.style.opacity = 1; }, 1000);
+    });
+
+    boton.addEventListener("click", () => {
+      window.location.href = "corazon.html";
+    });
+
+    const fondo = document.getElementById("constelaciones");
+    const ftx = fondo.getContext("2d");
+    fondo.width = window.innerWidth;
+    fondo.height = window.innerHeight;
+    const estrellas = Array.from({length: 150}).map(() => ({
+      x: Math.random() * fondo.width,
+      y: Math.random() * fondo.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3
+    }));
+    function animarFondo() {
+      ftx.clearRect(0, 0, fondo.width, fondo.height);
+      for (let i = 0; i < estrellas.length; i++) {
+        const e = estrellas[i];
+        e.x += e.vx;
+        e.y += e.vy;
+        if (e.x < 0 || e.x > fondo.width) e.vx *= -1;
+        if (e.y < 0 || e.y > fondo.height) e.vy *= -1;
+        ftx.beginPath();
+        ftx.arc(e.x, e.y, 1.2, 0, Math.PI * 2);
+        ftx.fillStyle = "white";
+        ftx.fill();
+        for (let j = i + 1; j < estrellas.length; j++) {
+          const dx = e.x - estrellas[j].x;
+          const dy = e.y - estrellas[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ftx.beginPath();
+            ftx.moveTo(e.x, e.y);
+            ftx.lineTo(estrellas[j].x, estrellas[j].y);
+            ftx.strokeStyle = "rgba(255,255,255,0.1)";
+            ftx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animarFondo);
+    }
+    animarFondo();
+  </script>
+</body>
+</html>
